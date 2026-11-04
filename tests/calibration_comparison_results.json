@@ -1,0 +1,867 @@
+{
+  "before": {
+    "name": "BEFORE Calibration",
+    "bp_threshold": 0.78,
+    "corn_threshold": 0.75,
+    "crop_accuracy": 96.72447013487476,
+    "disease_accuracy": 87.66859344894027,
+    "id_correct_crop": 502,
+    "id_correct_disease": 455,
+    "total_test": 519,
+    "false_rejections": 50,
+    "false_rejection_reasons": [
+      [
+        "2f668a95-80ab-40ac-98ef-657bd85b668b___FREC_Scab 3247.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.4150 < tau=0.6200)",
+        0.41496968269348145,
+        0.62
+      ],
+      [
+        "48dcb319-8b65-4bac-bba4-aa8ffa8abdd0___FREC_Scab 3519.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.5821 < tau=0.6300)",
+        0.5820843577384949,
+        0.63
+      ],
+      [
+        "517d0958-b10e-4260-a736-7a4bbb9706c0___FREC_Scab 3497.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.6311 < tau=0.7800)",
+        0.6311453580856323,
+        0.78
+      ],
+      [
+        "b02a7f1d-3cfc-489e-9e74-983059c6980d___FREC_Scab 3244.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.5110 < tau=0.6200)",
+        0.5109739899635315,
+        0.62
+      ],
+      [
+        "f7c4bd45-5098-4b2c-bbfb-2e47c8f2d711___FREC_Scab 3361.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.7086 < tau=0.7800)",
+        0.7086323499679565,
+        0.78
+      ],
+      [
+        "4a79c093-e813-4854-ba58-5b9e2831c7f0___JR_FrgE.S 2764.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.6261 < tau=0.6300)",
+        0.6261449456214905,
+        0.63
+      ],
+      [
+        "a8f06c83-bcab-4431-8c91-b00331c4b067___JR_FrgE.S 8613.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.5992 < tau=0.6800)",
+        0.5991529822349548,
+        0.68
+      ],
+      [
+        "c4833395-fa04-4b3a-89f1-6fbc5c3d7d18___JR_FrgE.S 2866.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.5502 < tau=0.6300)",
+        0.5502228736877441,
+        0.63
+      ],
+      [
+        "c8ede452-70bd-45bf-b820-e06d19d541bd___JR_FrgE.S 8662.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.6025 < tau=0.6300)",
+        0.60245680809021,
+        0.63
+      ],
+      [
+        "ee734326-8122-445c-adb5-9f0cb8dca9b7___JR_FrgE.S 2964.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.6787 < tau=0.7800)",
+        0.6787281036376953,
+        0.78
+      ],
+      [
+        "RS_Rust 1792.JPG",
+        "Corn",
+        "Corn_(maize)___Common_rust_",
+        "ood_gate (sim=0.7370 < tau=0.7500)",
+        0.7369682788848877,
+        0.75
+      ],
+      [
+        "RS_Rust 2218.JPG",
+        "Corn",
+        "Corn_(maize)___Common_rust_",
+        "ood_gate (sim=0.7469 < tau=0.7500)",
+        0.7469009757041931,
+        0.75
+      ],
+      [
+        "RS_Rust 2676.JPG",
+        "Corn",
+        "Corn_(maize)___Common_rust_",
+        "ood_gate (sim=0.6851 < tau=0.7500)",
+        0.6851391792297363,
+        0.75
+      ],
+      [
+        "6485e415-6e67-4be7-a198-9c3c6d3edc5c___R.S_HL 5528 copy.jpg",
+        "Corn",
+        "Corn_(maize)___healthy",
+        "ood_gate (sim=0.7398 < tau=0.7500)",
+        0.7398266792297363,
+        0.75
+      ],
+      [
+        "6c602efb-367c-4f64-bd31-35bbf6b5e9a7___R.S_HL 8284 copy.jpg",
+        "Corn",
+        "Corn_(maize)___healthy",
+        "ood_gate (sim=0.7370 < tau=0.7500)",
+        0.7370235919952393,
+        0.75
+      ],
+      [
+        "b21a07b8-8ede-4038-a837-6a7798b51327___R.S_HL 7917 copy 2.jpg",
+        "Corn",
+        "Corn_(maize)___healthy",
+        "ood_gate (sim=0.7252 < tau=0.7500)",
+        0.7251622080802917,
+        0.75
+      ],
+      [
+        "ddf456b0-86f5-4e5d-a23b-8dee67fcfcfb___FAM_B.Rot 3234.JPG",
+        "Grape",
+        "Grape___Black_rot",
+        "ood_gate (sim=0.7378 < tau=0.7800)",
+        0.7377610206604004,
+        0.78
+      ],
+      [
+        "0495b4d4-66a4-438c-862d-c483f08e4a95___JR_B.Spot 3288.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.5636 < tau=0.7800)",
+        0.5635992288589478,
+        0.78
+      ],
+      [
+        "42b527a8-b3a7-47ae-981b-91727cd2f7e5___JR_B.Spot 3306.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7350 < tau=0.7800)",
+        0.7350243330001831,
+        0.78
+      ],
+      [
+        "61764b09-9bb9-44b3-af94-d3408045b7c3___NREC_B.Spot 1891.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.6618 < tau=0.7800)",
+        0.661786675453186,
+        0.78
+      ],
+      [
+        "65fc5138-b38a-42d6-a892-1441585ceebd___NREC_B.Spot 9057.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7170 < tau=0.7800)",
+        0.7169911861419678,
+        0.78
+      ],
+      [
+        "7beb562a-e1b0-40a2-8b44-fd892051da87___JR_B.Spot 8989.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.6144 < tau=0.7800)",
+        0.6144334673881531,
+        0.78
+      ],
+      [
+        "831d19a0-117e-477c-9301-d9279edd1c5d___JR_B.Spot 3343.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7576 < tau=0.7800)",
+        0.757551908493042,
+        0.78
+      ],
+      [
+        "924c8aa8-14ac-4b67-847b-900965799792___JR_B.Spot 3169.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7374 < tau=0.7800)",
+        0.7374070882797241,
+        0.78
+      ],
+      [
+        "cd35e968-1e90-4fc9-a0d1-574b89bc3019___NREC_B.Spot 9082.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7288 < tau=0.7800)",
+        0.7287975549697876,
+        0.78
+      ],
+      [
+        "ed668b2e-9249-4905-b5ea-9ef6bb4417dd___NREC_B.Spot 1974.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7267 < tau=0.7800)",
+        0.7266765832901001,
+        0.78
+      ],
+      [
+        "31394cd0-c576-4d84-9318-63e7a4ee4170___JR_HL 8640.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___healthy",
+        "ood_gate (sim=0.7404 < tau=0.7800)",
+        0.740432858467102,
+        0.78
+      ],
+      [
+        "66b6c6d1-fe63-4c7e-8054-bdf6ff67ff57___RS_Early.B 7514.JPG",
+        "Potato",
+        "Potato___Early_blight",
+        "ood_gate (sim=0.6616 < tau=0.6800)",
+        0.6616160869598389,
+        0.68
+      ],
+      [
+        "74316ef6-7cce-4ed9-8fbf-9bf42d14657c___RS_Early.B 7352.JPG",
+        "Potato",
+        "Potato___Early_blight",
+        "ood_gate (sim=0.6614 < tau=0.6800)",
+        0.6613759398460388,
+        0.68
+      ],
+      [
+        "471fd810-047d-4c87-933b-14c8b46d4b20___RS_LB 5450.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6773 < tau=0.6800)",
+        0.677283763885498,
+        0.68
+      ],
+      [
+        "80e39105-97cd-4368-9e3a-b5498ae1c0a2___RS_LB 4474.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.5921 < tau=0.6200)",
+        0.5920826196670532,
+        0.62
+      ],
+      [
+        "93d91b96-e024-477c-9b76-796e3f1614d4___RS_LB 3297.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "foliar_check",
+        0.0,
+        0.0
+      ],
+      [
+        "af13137c-1561-4c1c-b85b-5ec8930f2b38___RS_LB 5425.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6042 < tau=0.6800)",
+        0.604202151298523,
+        0.68
+      ],
+      [
+        "dac53cd2-477e-4f7b-a59d-bb9018eec686___RS_LB 2879.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6171 < tau=0.6800)",
+        0.6171061992645264,
+        0.68
+      ],
+      [
+        "eb34280e-0cfb-4166-a9b8-a15892c9ff5c___RS_LB 4450.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6455 < tau=0.6800)",
+        0.6455475091934204,
+        0.68
+      ],
+      [
+        "36bdc44c-96a4-40bb-86f7-63a91d706e96___RS_HL 4203.JPG",
+        "Potato",
+        "Potato___healthy",
+        "ood_gate (sim=0.7729 < tau=0.7800)",
+        0.7729018330574036,
+        0.78
+      ],
+      [
+        "849aa978-c7b9-4344-9ca8-129219a65f8e___RS_HL 1874.JPG",
+        "Potato",
+        "Potato___healthy",
+        "soybean_rule",
+        0.870316743850708,
+        0.78
+      ],
+      [
+        "3ee3edcb-1676-47c5-bae0-9c27b1a19a39___RS_HL 3189.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "soybean_rule",
+        0.7968178391456604,
+        0.78
+      ],
+      [
+        "88252fa1-d7cf-444b-964f-89af068a35ef___RS_HL 5042.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.6762 < tau=0.7800)",
+        0.6762050986289978,
+        0.78
+      ],
+      [
+        "99b496ef-a456-44ab-bf55-3d72a71ec5b7___RS_HL 4293.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.7454 < tau=0.7800)",
+        0.7453785538673401,
+        0.78
+      ],
+      [
+        "e0e2a4ff-f2b2-464f-804d-c69b3db0f70a___RS_HL 4686.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.7774 < tau=0.7800)",
+        0.7773526906967163,
+        0.78
+      ],
+      [
+        "e6011e5d-be9c-4ec2-9c5f-33e174c791e5___RS_HL 3354.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.7562 < tau=0.7800)",
+        0.7562242150306702,
+        0.78
+      ],
+      [
+        "4b8821ef-8364-4a04-9549-58d58ffe0411___RS_Erly.B 7704.JPG",
+        "Tomato",
+        "Tomato___Early_blight",
+        "ood_gate (sim=0.6145 < tau=0.6800)",
+        0.6144610047340393,
+        0.68
+      ],
+      [
+        "511fb1ba-bef6-4144-9e05-461a66022cba___RS_Erly.B 8435.JPG",
+        "Tomato",
+        "Tomato___Early_blight",
+        "ood_gate (sim=0.6161 < tau=0.6200)",
+        0.6161314845085144,
+        0.62
+      ],
+      [
+        "56f361f0-4a14-4fc1-acc4-798e6614f8fb___RS_Erly.B 8313.JPG",
+        "Tomato",
+        "Tomato___Early_blight",
+        "ood_gate (sim=0.5999 < tau=0.6200)",
+        0.5998737215995789,
+        0.62
+      ],
+      [
+        "3f36ff41-3817-497b-95c9-7f79819925e7___RS_Late.B 6314.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "foliar_check",
+        0.0,
+        0.0
+      ],
+      [
+        "40076fd7-8c21-41a4-9bc9-3c1c53e1a865___RS_Late.B 5594.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "ood_gate (sim=0.5369 < tau=0.6200)",
+        0.5369101762771606,
+        0.62
+      ],
+      [
+        "a647b254-deb0-427d-89e4-05eedfeeffea___RS_Late.B 5106.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "ood_gate (sim=0.3998 < tau=0.6200)",
+        0.3998411297798157,
+        0.62
+      ],
+      [
+        "ecacf5db-abcf-408c-b41a-93e339fbfc0c___RS_Late.B 6405.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "ood_gate (sim=0.6573 < tau=0.6800)",
+        0.6573014259338379,
+        0.68
+      ],
+      [
+        "31e077d4-97f5-4e4c-8b76-e2ccbf52ed2d___RS_HL 0460.JPG",
+        "Tomato",
+        "Tomato___healthy",
+        "ood_gate (sim=0.6121 < tau=0.6200)",
+        0.6121217012405396,
+        0.62
+      ]
+    ],
+    "ood_rejection_rate": 96.61016949152543,
+    "ood_correct_rejected": 57,
+    "total_ood": 59,
+    "false_acceptances": 2,
+    "false_acceptance_details": [
+      {
+        "path": "scratch\\eval_dataset\\soybean_diseased\\diseased_soybean_flip_horizontal.jpg",
+        "category": "soybean_diseased",
+        "crop_pred": "Bell_Pepper",
+        "crop_prob": 0.9999616146087646,
+        "cosine_sim": 0.7839043140411377,
+        "threshold": 0.78,
+        "disease_pred": "Pepper__bell___Bacterial_spot",
+        "disease_prob": 0.9999059438705444
+      },
+      {
+        "path": "scratch\\eval_dataset\\wheat\\wheat_07.jpg",
+        "category": "wheat",
+        "crop_pred": "Corn",
+        "crop_prob": 0.9998962879180908,
+        "cosine_sim": 0.7571330070495605,
+        "threshold": 0.75,
+        "disease_pred": "Corn_(maize)___Common_rust_",
+        "disease_prob": 0.9867624640464783
+      }
+    ]
+  },
+  "after": {
+    "name": "AFTER Calibration",
+    "bp_threshold": 0.785,
+    "corn_threshold": 0.76,
+    "crop_accuracy": 96.72447013487476,
+    "disease_accuracy": 87.47591522157995,
+    "id_correct_crop": 502,
+    "id_correct_disease": 454,
+    "total_test": 519,
+    "false_rejections": 51,
+    "false_rejection_reasons": [
+      [
+        "2f668a95-80ab-40ac-98ef-657bd85b668b___FREC_Scab 3247.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.4150 < tau=0.6200)",
+        0.41496968269348145,
+        0.62
+      ],
+      [
+        "48dcb319-8b65-4bac-bba4-aa8ffa8abdd0___FREC_Scab 3519.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.5821 < tau=0.6300)",
+        0.5820843577384949,
+        0.63
+      ],
+      [
+        "517d0958-b10e-4260-a736-7a4bbb9706c0___FREC_Scab 3497.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.6311 < tau=0.7850)",
+        0.6311453580856323,
+        0.785
+      ],
+      [
+        "b02a7f1d-3cfc-489e-9e74-983059c6980d___FREC_Scab 3244.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.5110 < tau=0.6200)",
+        0.5109739899635315,
+        0.62
+      ],
+      [
+        "f7c4bd45-5098-4b2c-bbfb-2e47c8f2d711___FREC_Scab 3361.JPG",
+        "Apple",
+        "Apple___Apple_scab",
+        "ood_gate (sim=0.7086 < tau=0.7800)",
+        0.7086323499679565,
+        0.78
+      ],
+      [
+        "4a79c093-e813-4854-ba58-5b9e2831c7f0___JR_FrgE.S 2764.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.6261 < tau=0.6300)",
+        0.6261449456214905,
+        0.63
+      ],
+      [
+        "a8f06c83-bcab-4431-8c91-b00331c4b067___JR_FrgE.S 8613.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.5992 < tau=0.6800)",
+        0.5991529822349548,
+        0.68
+      ],
+      [
+        "c4833395-fa04-4b3a-89f1-6fbc5c3d7d18___JR_FrgE.S 2866.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.5502 < tau=0.6300)",
+        0.5502228736877441,
+        0.63
+      ],
+      [
+        "c8ede452-70bd-45bf-b820-e06d19d541bd___JR_FrgE.S 8662.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.6025 < tau=0.6300)",
+        0.60245680809021,
+        0.63
+      ],
+      [
+        "ee734326-8122-445c-adb5-9f0cb8dca9b7___JR_FrgE.S 2964.JPG",
+        "Apple",
+        "Apple___Black_rot",
+        "ood_gate (sim=0.6787 < tau=0.7850)",
+        0.6787281036376953,
+        0.785
+      ],
+      [
+        "RS_Rust 1792.JPG",
+        "Corn",
+        "Corn_(maize)___Common_rust_",
+        "ood_gate (sim=0.7370 < tau=0.7600)",
+        0.7369682788848877,
+        0.76
+      ],
+      [
+        "RS_Rust 2218.JPG",
+        "Corn",
+        "Corn_(maize)___Common_rust_",
+        "ood_gate (sim=0.7469 < tau=0.7600)",
+        0.7469009757041931,
+        0.76
+      ],
+      [
+        "RS_Rust 2480.JPG",
+        "Corn",
+        "Corn_(maize)___Common_rust_",
+        "ood_gate (sim=0.7579 < tau=0.7600)",
+        0.7579383850097656,
+        0.76
+      ],
+      [
+        "RS_Rust 2676.JPG",
+        "Corn",
+        "Corn_(maize)___Common_rust_",
+        "ood_gate (sim=0.6851 < tau=0.7600)",
+        0.6851391792297363,
+        0.76
+      ],
+      [
+        "6485e415-6e67-4be7-a198-9c3c6d3edc5c___R.S_HL 5528 copy.jpg",
+        "Corn",
+        "Corn_(maize)___healthy",
+        "ood_gate (sim=0.7398 < tau=0.7600)",
+        0.7398266792297363,
+        0.76
+      ],
+      [
+        "6c602efb-367c-4f64-bd31-35bbf6b5e9a7___R.S_HL 8284 copy.jpg",
+        "Corn",
+        "Corn_(maize)___healthy",
+        "ood_gate (sim=0.7370 < tau=0.7600)",
+        0.7370235919952393,
+        0.76
+      ],
+      [
+        "b21a07b8-8ede-4038-a837-6a7798b51327___R.S_HL 7917 copy 2.jpg",
+        "Corn",
+        "Corn_(maize)___healthy",
+        "ood_gate (sim=0.7252 < tau=0.7600)",
+        0.7251622080802917,
+        0.76
+      ],
+      [
+        "ddf456b0-86f5-4e5d-a23b-8dee67fcfcfb___FAM_B.Rot 3234.JPG",
+        "Grape",
+        "Grape___Black_rot",
+        "ood_gate (sim=0.7378 < tau=0.7800)",
+        0.7377610206604004,
+        0.78
+      ],
+      [
+        "0495b4d4-66a4-438c-862d-c483f08e4a95___JR_B.Spot 3288.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.5636 < tau=0.7850)",
+        0.5635992288589478,
+        0.785
+      ],
+      [
+        "42b527a8-b3a7-47ae-981b-91727cd2f7e5___JR_B.Spot 3306.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7350 < tau=0.7850)",
+        0.7350243330001831,
+        0.785
+      ],
+      [
+        "61764b09-9bb9-44b3-af94-d3408045b7c3___NREC_B.Spot 1891.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.6618 < tau=0.7850)",
+        0.661786675453186,
+        0.785
+      ],
+      [
+        "65fc5138-b38a-42d6-a892-1441585ceebd___NREC_B.Spot 9057.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7170 < tau=0.7850)",
+        0.7169911861419678,
+        0.785
+      ],
+      [
+        "7beb562a-e1b0-40a2-8b44-fd892051da87___JR_B.Spot 8989.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.6144 < tau=0.7850)",
+        0.6144334673881531,
+        0.785
+      ],
+      [
+        "831d19a0-117e-477c-9301-d9279edd1c5d___JR_B.Spot 3343.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7576 < tau=0.7850)",
+        0.757551908493042,
+        0.785
+      ],
+      [
+        "924c8aa8-14ac-4b67-847b-900965799792___JR_B.Spot 3169.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7374 < tau=0.7850)",
+        0.7374070882797241,
+        0.785
+      ],
+      [
+        "cd35e968-1e90-4fc9-a0d1-574b89bc3019___NREC_B.Spot 9082.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7288 < tau=0.7850)",
+        0.7287975549697876,
+        0.785
+      ],
+      [
+        "ed668b2e-9249-4905-b5ea-9ef6bb4417dd___NREC_B.Spot 1974.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___Bacterial_spot",
+        "ood_gate (sim=0.7267 < tau=0.7850)",
+        0.7266765832901001,
+        0.785
+      ],
+      [
+        "31394cd0-c576-4d84-9318-63e7a4ee4170___JR_HL 8640.JPG",
+        "Bell_Pepper",
+        "Pepper__bell___healthy",
+        "ood_gate (sim=0.7404 < tau=0.7850)",
+        0.740432858467102,
+        0.785
+      ],
+      [
+        "66b6c6d1-fe63-4c7e-8054-bdf6ff67ff57___RS_Early.B 7514.JPG",
+        "Potato",
+        "Potato___Early_blight",
+        "ood_gate (sim=0.6616 < tau=0.6800)",
+        0.6616160869598389,
+        0.68
+      ],
+      [
+        "74316ef6-7cce-4ed9-8fbf-9bf42d14657c___RS_Early.B 7352.JPG",
+        "Potato",
+        "Potato___Early_blight",
+        "ood_gate (sim=0.6614 < tau=0.6800)",
+        0.6613759398460388,
+        0.68
+      ],
+      [
+        "471fd810-047d-4c87-933b-14c8b46d4b20___RS_LB 5450.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6773 < tau=0.6800)",
+        0.677283763885498,
+        0.68
+      ],
+      [
+        "80e39105-97cd-4368-9e3a-b5498ae1c0a2___RS_LB 4474.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.5921 < tau=0.6200)",
+        0.5920826196670532,
+        0.62
+      ],
+      [
+        "93d91b96-e024-477c-9b76-796e3f1614d4___RS_LB 3297.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "foliar_check",
+        0.0,
+        0.0
+      ],
+      [
+        "af13137c-1561-4c1c-b85b-5ec8930f2b38___RS_LB 5425.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6042 < tau=0.6800)",
+        0.604202151298523,
+        0.68
+      ],
+      [
+        "dac53cd2-477e-4f7b-a59d-bb9018eec686___RS_LB 2879.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6171 < tau=0.6800)",
+        0.6171061992645264,
+        0.68
+      ],
+      [
+        "eb34280e-0cfb-4166-a9b8-a15892c9ff5c___RS_LB 4450.JPG",
+        "Potato",
+        "Potato___Late_blight",
+        "ood_gate (sim=0.6455 < tau=0.6800)",
+        0.6455475091934204,
+        0.68
+      ],
+      [
+        "36bdc44c-96a4-40bb-86f7-63a91d706e96___RS_HL 4203.JPG",
+        "Potato",
+        "Potato___healthy",
+        "ood_gate (sim=0.7729 < tau=0.7800)",
+        0.7729018330574036,
+        0.78
+      ],
+      [
+        "849aa978-c7b9-4344-9ca8-129219a65f8e___RS_HL 1874.JPG",
+        "Potato",
+        "Potato___healthy",
+        "soybean_rule",
+        0.870316743850708,
+        0.78
+      ],
+      [
+        "3ee3edcb-1676-47c5-bae0-9c27b1a19a39___RS_HL 3189.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "soybean_rule",
+        0.7968178391456604,
+        0.78
+      ],
+      [
+        "88252fa1-d7cf-444b-964f-89af068a35ef___RS_HL 5042.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.6762 < tau=0.7800)",
+        0.6762050986289978,
+        0.78
+      ],
+      [
+        "99b496ef-a456-44ab-bf55-3d72a71ec5b7___RS_HL 4293.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.7454 < tau=0.7800)",
+        0.7453785538673401,
+        0.78
+      ],
+      [
+        "e0e2a4ff-f2b2-464f-804d-c69b3db0f70a___RS_HL 4686.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.7774 < tau=0.7800)",
+        0.7773526906967163,
+        0.78
+      ],
+      [
+        "e6011e5d-be9c-4ec2-9c5f-33e174c791e5___RS_HL 3354.JPG",
+        "Soybean",
+        "Soybean___healthy",
+        "ood_gate (sim=0.7562 < tau=0.7800)",
+        0.7562242150306702,
+        0.78
+      ],
+      [
+        "4b8821ef-8364-4a04-9549-58d58ffe0411___RS_Erly.B 7704.JPG",
+        "Tomato",
+        "Tomato___Early_blight",
+        "ood_gate (sim=0.6145 < tau=0.6800)",
+        0.6144610047340393,
+        0.68
+      ],
+      [
+        "511fb1ba-bef6-4144-9e05-461a66022cba___RS_Erly.B 8435.JPG",
+        "Tomato",
+        "Tomato___Early_blight",
+        "ood_gate (sim=0.6161 < tau=0.6200)",
+        0.6161314845085144,
+        0.62
+      ],
+      [
+        "56f361f0-4a14-4fc1-acc4-798e6614f8fb___RS_Erly.B 8313.JPG",
+        "Tomato",
+        "Tomato___Early_blight",
+        "ood_gate (sim=0.5999 < tau=0.6200)",
+        0.5998737215995789,
+        0.62
+      ],
+      [
+        "3f36ff41-3817-497b-95c9-7f79819925e7___RS_Late.B 6314.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "foliar_check",
+        0.0,
+        0.0
+      ],
+      [
+        "40076fd7-8c21-41a4-9bc9-3c1c53e1a865___RS_Late.B 5594.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "ood_gate (sim=0.5369 < tau=0.6200)",
+        0.5369101762771606,
+        0.62
+      ],
+      [
+        "a647b254-deb0-427d-89e4-05eedfeeffea___RS_Late.B 5106.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "ood_gate (sim=0.3998 < tau=0.6200)",
+        0.3998411297798157,
+        0.62
+      ],
+      [
+        "ecacf5db-abcf-408c-b41a-93e339fbfc0c___RS_Late.B 6405.JPG",
+        "Tomato",
+        "Tomato___Late_blight",
+        "ood_gate (sim=0.6573 < tau=0.6800)",
+        0.6573014259338379,
+        0.68
+      ],
+      [
+        "31e077d4-97f5-4e4c-8b76-e2ccbf52ed2d___RS_HL 0460.JPG",
+        "Tomato",
+        "Tomato___healthy",
+        "ood_gate (sim=0.6121 < tau=0.6200)",
+        0.6121217012405396,
+        0.62
+      ]
+    ],
+    "ood_rejection_rate": 100.0,
+    "ood_correct_rejected": 59,
+    "total_ood": 59,
+    "false_acceptances": 0,
+    "false_acceptance_details": []
+  }
+}

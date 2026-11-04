@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('history.title') }} - Smart Crop System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">{{ t('history.title') }}</h2>
+            <p class="text-muted small mb-0">{{ t('history.subtitle') }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold shadow-sm">
+                <i class="bi bi-cloud-arrow-up-fill me-2"></i> {{ t('history.upload_btn') }}
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        {% if predictions %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">{{ t('history.col_photo') }}</th>
+                        <th>{{ t('history.col_crop') }}</th>
+                        <th>{{ t('history.col_disease') }}</th>
+                        <th>{{ t('history.col_confidence') }}</th>
+                        <th>{{ t('history.col_date') }}</th>
+                        <th class="text-end pe-4">{{ t('history.col_actions') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pred in predictions %}
+                    <tr>
+                        <td class="ps-4">
+                            <img src="{{ url_for('static', filename='uploads/' + pred.image_name) }}" alt="Leaf" class="rounded-3 shadow-sm" style="width: 55px; height: 55px; object-fit: cover;">
+                        </td>
+                        <td>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle fw-semibold">
+                                {{ get_crop_display(pred.crop) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">{{ get_disease_display(pred.class_name) }}</div>
+                            <small class="text-muted">{{ pred.class_name }}</small>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center" style="max-width: 140px;">
+                                <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                    <div class="progress-bar {% if pred.confidence >= 80 %}bg-success{% elif pred.confidence >= 60 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ pred.confidence }}%"></div>
+                                </div>
+                                <span class="fw-bold small">{{ "%.1f"|format(pred.confidence) }}%</span>
+                            </div>
+                        </td>
+                        <td class="text-muted small">
+                            {{ pred.timestamp }}
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{{ url_for('view_result', prediction_id=pred.id) }}" class="btn btn-outline-forest btn-sm px-3">
+                                <i class="bi bi-eye me-1"></i> {{ t('history.view_result') }}
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="stat-icon bg-success-subtle text-success mx-auto mb-3" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-clock-rotate-left fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-dark">{{ t('history.empty_title') }}</h5>
+            <p class="text-muted small mb-3">{{ t('history.empty_subtitle') }}</p>
+            <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold">
+                <i class="bi bi-cloud-arrow-up me-1"></i> {{ t('history.upload_btn') }}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

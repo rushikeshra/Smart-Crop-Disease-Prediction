@@ -1,0 +1,41 @@
+# Python Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+*.py[cod]
+__pycache__/
+
+# Local Configuration & Secrets
+.env
+*.local.env
+
+# SQLite Databases & Local Logs
+database/*.db
+database/*.sqlite
+database/*.sqlite3
+*.log
+
+# Large Datasets & Archives (GitHub has 100MB file limit)
+dataset/raw/
+*.parquet
+*.zip
+*.tar*
+*.gz
+
+# Scratch & Temporary Testing Scripts
+scratch/
+.system_generated/
+
+# IDE / Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Uploaded User Leaf Images (preserve directory with .gitkeep)
+static/uploads/*
+!static/uploads/.gitkeep
+dataset/processed/

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Precision Crop Recommendation - Smart Crop AI{% endblock %}
+
+{% block content %}
+<div class="container my-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="text-center mb-4">
+                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fs-6 mb-2 fw-semibold">
+                        <i class="fa-solid fa-microchip me-1"></i> Precision Agriculture &bull; Random Forest AI
+                    </span>
+                    <h2 class="fw-bold text-dark">Crop Recommendation System</h2>
+                    <p class="text-muted small col-md-10 mx-auto">
+                        Enter your field's soil nutrient parameters (NPK) and local climate metrics to discover the most ecologically suitable and economically viable crop across 22 major crop categories.
+                    </p>
+
+                    <!-- Quick Pre-fill Demo Presets -->
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                        <small class="text-muted align-self-center me-1"><i class="fa-solid fa-wand-magic-sparkles text-primary me-1"></i> Quick Demo Presets:</small>
+                        <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="loadPreset(90, 42, 43, 20.8, 82.0, 6.5, 202.9)">
+                            <i class="fa-solid fa-bowl-rice me-1"></i> Rice Profile
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-warning text-dark rounded-pill" onclick="loadPreset(71, 54, 16, 22.6, 65.0, 6.2, 70.5)">
+                            <i class="fa-solid fa-wheat-awn me-1"></i> Maize Profile
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-info text-dark rounded-pill" onclick="loadPreset(104, 28, 30, 26.5, 58.0, 6.8, 150.0)">
+                            <i class="fa-solid fa-mug-hot me-1"></i> Coffee Profile
+                        </button>
+                    </div>
+                </div>
+
+                <form action="{{ url_for('recommend_crop') }}" method="POST" id="cropForm">
+                    
+                    <div class="p-3 bg-light rounded-4 mb-4">
+                        <h5 class="fw-bold text-forest mb-3">
+                            <i class="fa-solid fa-flask-vial text-success me-2"></i> 1. Soil Nutrients (NPK in kg/ha)
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-dark small">Nitrogen (N)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white text-success fw-bold">N</span>
+                                    <input type="number" step="any" min="0" max="200" name="nitrogen" id="inputN" class="form-control" placeholder="e.g. 90" required>
+                                </div>
+                                <small class="text-muted xx-small">Standard range: 0 - 140 kg/ha</small>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-dark small">Phosphorus (P)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white text-success fw-bold">P</span>
+                                    <input type="number" step="any" min="0" max="200" name="phosphorus" id="inputP" class="form-control" placeholder="e.g. 42" required>
+                                </div>
+                                <small class="text-muted xx-small">Standard range: 5 - 145 kg/ha</small>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold text-dark small">Potassium (K)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white text-success fw-bold">K</span>
+                                    <input type="number" step="any" min="0" max="300" name="potassium" id="inputK" class="form-control" placeholder="e.g. 43" required>
+                                </div>
+                                <small class="text-muted xx-small">Standard range: 5 - 205 kg/ha</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-4 mb-4">
+                        <h5 class="fw-bold text-forest mb-3">
+                            <i class="fa-solid fa-cloud-sun text-primary me-2"></i> 2. Environmental & Climate Metrics
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark small">Ambient Temperature (&deg;C)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-thermometer-half text-danger"></i></span>
+                                    <input type="number" step="any" min="-10" max="60" name="temperature" id="inputTemp" class="form-control" placeholder="e.g. 20.8" required>
+                                </div>
+                                <small class="text-muted xx-small">Average daytime temperature</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark small">Relative Humidity (%)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-droplet-half text-info"></i></span>
+                                    <input type="number" step="any" min="0" max="100" name="humidity" id="inputHum" class="form-control" placeholder="e.g. 82.0" required>
+                                </div>
+                                <small class="text-muted xx-small">Air moisture saturation (0 - 100%)</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark small">Soil pH Value (Acidity/Alkalinity)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-speedometer text-warning"></i></span>
+                                    <input type="number" step="any" min="0" max="14" name="ph" id="inputPH" class="form-control" placeholder="e.g. 6.5" required>
+                                </div>
+                                <small class="text-muted xx-small">Standard scale: 3.5 (acidic) to 9.5 (alkaline)</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold text-dark small">Seasonal Rainfall (mm)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white"><i class="bi bi-cloud-rain text-primary"></i></span>
+                                    <input type="number" step="any" min="0" max="500" name="rainfall" id="inputRain" class="form-control" placeholder="e.g. 202.9" required>
+                                </div>
+                                <small class="text-muted xx-small">Total precipitation during crop cycle</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" id="recommendSubmitBtn" class="btn btn-forest btn-lg py-3 fw-semibold shadow-sm">
+                            <i class="bi bi-flower1 me-2"></i> Compute Optimal Crop Recommendation
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Agronomic Info Banner -->
+            <div class="card mt-4 border-0 shadow-sm rounded-4 p-4 bg-white">
+                <div class="d-flex align-items-center">
+                    <div class="avatar-circle bg-success text-white me-3" style="width: 44px; height: 44px;">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark">Supported Crop Catalog (22 Major Varieties)</h6>
+                        <p class="text-muted small mb-0">
+                            Rice, Maize, Chickpea, Kidneybeans, Pigeonpeas, Mothbeans, Mungbean, Blackgram, Lentil, Pomegranate, Banana, Mango, Grapes, Watermelon, Muskmelon, Apple, Orange, Papaya, Coconut, Cotton, Jute, Coffee.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function loadPreset(n, p, k, temp, hum, ph, rain) {
+    document.getElementById("inputN").value = n;
+    document.getElementById("inputP").value = p;
+    document.getElementById("inputK").value = k;
+    document.getElementById("inputTemp").value = temp;
+    document.getElementById("inputHum").value = hum;
+    document.getElementById("inputPH").value = ph;
+    document.getElementById("inputRain").value = rain;
+}
+
+document.getElementById("cropForm").addEventListener("submit", function () {
+    const btn = document.getElementById("recommendSubmitBtn");
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Analyzing Soil Nutrients & Climate...';
+});
+</script>
+{% endblock %}

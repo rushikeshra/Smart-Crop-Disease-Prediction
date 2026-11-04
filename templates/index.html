@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Crop Disease Prediction & Advisory System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="p-4 p-md-5 mb-5 bg-white rounded-4 shadow-sm hero-banner border">
+        <div class="container-fluid py-2">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-3 fw-semibold border border-success-subtle">
+                        <i class="fa-solid fa-microchip me-1"></i> {{ t('home.hero_badge') }}
+                    </span>
+                    <h1 class="display-5 fw-bold text-dark mb-3">{{ t('home.hero_title') }}</h1>
+                    <p class="col-md-11 fs-5 text-muted mb-4">
+                        {{ t('home.hero_subtitle') }}
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% if session.get('user_id') %}
+                        <a href="{{ url_for('predict') }}" class="btn btn-forest btn-lg px-4 py-2 fw-semibold">
+                            <i class="bi bi-cloud-arrow-up-fill me-2"></i> {{ t('nav.upload_leaf') }}
+                        </a>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-forest btn-lg px-3 py-2 fw-semibold">
+                            <i class="bi bi-speedometer2 me-1"></i> {{ t('nav.dashboard') }}
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('register') }}" class="btn btn-forest btn-lg px-4 py-2 fw-semibold">
+                            <i class="bi bi-person-plus-fill me-2"></i> {{ t('nav.register') }}
+                        </a>
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-forest btn-lg px-4 py-2">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> {{ t('nav.login') }}
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center mt-4 mt-lg-0">
+                    <div class="hero-image-card p-3 bg-white rounded-4 shadow-sm border text-center">
+                        <img src="{{ url_for('static', filename='images/hero_leaf.jpg') }}" alt="Crop Leaf Diagnosis AI" class="img-fluid rounded-3 mb-3 hero-img" style="object-fit: cover; max-height: 270px; width: 100%;">
+                        <div class="d-flex justify-content-around text-start border-top pt-2">
+                            <div>
+                                <small class="text-muted d-block">Supported Crops</small>
+                                <span class="fw-bold text-dark">10 Crops (31 Pathologies)</span>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">AI Model</small>
+                                <span class="fw-bold text-success">MobileNetV2 CNN</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="row my-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold text-dark">How It Works</h2>
+            <p class="text-muted">A streamlined deep learning and agricultural advisory pipeline.</p>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3 feature-card">
+                <div class="feature-icon bg-success-subtle text-success mx-auto mb-3">
+                    <i class="fa-solid fa-cloud-arrow-up fs-3"></i>
+                </div>
+                <h5 class="fw-bold">1. Upload Leaf</h5>
+                <p class="text-muted small">Upload or drag & drop a clear leaf photo directly in your browser.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3 feature-card">
+                <div class="feature-icon bg-primary-subtle text-primary mx-auto mb-3">
+                    <i class="fa-solid fa-brain fs-3"></i>
+                </div>
+                <h5 class="fw-bold">2. CNN Classification</h5>
+                <p class="text-muted small">MobileNetV2 transfer learning model classifies exact crop + disease condition.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3 feature-card">
+                <div class="feature-icon bg-warning-subtle text-warning mx-auto mb-3">
+                    <i class="fa-solid fa-shield-halved fs-3"></i>
+                </div>
+                <h5 class="fw-bold">3. Confidence Guard</h5>
+                <p class="text-muted small">Configurable threshold guards against false diagnoses on uncertain or unclear images.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-3 feature-card">
+                <div class="feature-icon bg-info-subtle text-info mx-auto mb-3">
+                    <i class="fa-solid fa-notes-medical fs-3"></i>
+                </div>
+                <h5 class="fw-bold">4. Agronomic Advisory</h5>
+                <p class="text-muted small">Instant actionable recommendations for symptoms, biological cures, and fungicides.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supported Crops & Pathogens -->
+    <div class="row my-5">
+        <div class="col-12 text-center mb-4">
+            <h2 class="fw-bold text-dark">Supported Crops & Pathogens</h2>
+            <p class="text-muted">High-precision classification across 31 conditions with strict morphological class isolation.</p>
+        </div>
+
+        <!-- Soybean -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden border-success">
+                <div class="card-header bg-forest text-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-seedling me-2 text-lime"></i> Soybean</h5>
+                    <span class="badge bg-lime text-dark fw-bold">Active</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage (Trifoliate Leaf)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Bacterial Blight (Pseudomonas savastanoi)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Frogeye Leaf Spot (Cercospora sojina)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Soybean Rust (Phakopsora pachyrhizi)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cotton -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden border-info">
+                <div class="card-header bg-forest text-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-cloud me-2 text-lime"></i> Cotton</h5>
+                    <span class="badge bg-info text-white fw-bold">New</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Bacterial Blight / Angular Leaf Spot</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Alternaria Leaf Spot</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Leaf Curl Virus</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Green Gram -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden border-success">
+                <div class="card-header bg-forest text-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-leaf me-2 text-lime"></i> Green Gram</h5>
+                    <span class="badge bg-success text-white fw-bold">New</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Cercospora Leaf Spot</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Yellow Mosaic Virus (MYMV)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Powdery Mildew</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pigeon Pea -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden border-warning">
+                <div class="card-header bg-forest text-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-seedling me-2 text-lime"></i> Pigeon Pea</h5>
+                    <span class="badge bg-warning text-dark fw-bold">New</span>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Sterility Mosaic Disease (PPSMV)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Phytophthora Blight</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Cercospora Leaf Spot</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tomato -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden">
+                <div class="card-header bg-forest text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-apple-whole me-2 text-lime"></i> Tomato</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Early Blight (Alternaria solani)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Late Blight (Phytophthora infestans)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Potato -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden">
+                <div class="card-header bg-forest text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-bowl-rice me-2 text-lime"></i> Potato</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Early Blight (Alternaria solani)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Late Blight (Phytophthora infestans)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bell Pepper -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden">
+                <div class="card-header bg-forest text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-pepper-hot me-2 text-lime"></i> Bell Pepper</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Bacterial Spot (Xanthomonas)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Corn / Maize -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden">
+                <div class="card-header bg-forest text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-wheat-awn me-2 text-lime"></i> Corn (Maize)</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Common Rust (Puccinia sorghi)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Apple -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden">
+                <div class="card-header bg-forest text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-tree me-2 text-lime"></i> Apple</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Apple Scab (Venturia inaequalis)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Black Rot (Botryosphaeria obtusa)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grape -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 border rounded-4 shadow-sm overflow-hidden">
+                <div class="card-header bg-forest text-white py-3">
+                    <h5 class="fw-bold mb-0"><i class="fa-solid fa-wine-glass-empty me-2 text-lime"></i> Grape</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-2">Classified conditions:</p>
+                    <ul class="list-group list-group-flush small">
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-xmark text-danger me-2"></i> Black Rot (Guignardia bidwellii)</li>
+                        <li class="list-group-item d-flex align-items-center"><i class="fa-solid fa-circle-check text-success me-2"></i> Healthy Foliage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

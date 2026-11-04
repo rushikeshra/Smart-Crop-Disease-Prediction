@@ -1,0 +1,615 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('dashboard.title') }} - Smart Crop AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">{{ t('dashboard.title') }}</h2>
+            <p class="text-muted small mb-0">{{ t('dashboard.subtitle') }}</p>
+        </div>
+        <div>
+            <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold shadow-sm">
+                <i class="bi bi-cloud-arrow-up-fill me-1"></i> {{ t('nav.upload_leaf') }}
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards Row (Interactive & Clickable for In-Depth Info) -->
+    <div class="row mb-4">
+        <!-- Total Leaf Diagnoses Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 stat-card stat-card-clickable bg-white h-100" 
+                 role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#scansModal" title="Click to view Scan Details">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-success-subtle text-success me-3">
+                        <i class="fa-solid fa-chart-line fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small text-uppercase fw-semibold">{{ t('dashboard.total_scans') }}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-muted card-click-hint small"></i>
+                        </div>
+                        <h3 class="fw-bold text-dark mb-0">{{ stats.get('total_predictions', 0) }}</h3>
+                        <small class="text-success fw-semibold"><i class="fa-solid fa-circle-info me-1"></i>View Activity Details</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supported Crops Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 stat-card stat-card-clickable bg-white h-100" 
+                 role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#cropsModal" title="Click to view 10 Supported Crops">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-primary-subtle text-primary me-3">
+                        <i class="fa-solid fa-seedling fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small text-uppercase fw-semibold">{{ t('dashboard.supported_crops') }}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-muted card-click-hint small"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-0">10</h4>
+                        <small class="text-primary fw-semibold">{{ t('dashboard.supported_crops_sub') }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pathology Coverage Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 stat-card stat-card-clickable bg-white h-100" 
+                 role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#categoriesModal" title="Click to view all 31 Conditions">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-warning-subtle text-warning me-3">
+                        <i class="fa-solid fa-shield-virus fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small text-uppercase fw-semibold">{{ t('predict.trained_categories_title') }}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-muted card-click-hint small"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-0">31</h4>
+                        <small class="text-success fw-semibold">{{ t('predict.view_all_conditions') }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Accuracy Card -->
+        <div class="col-md-3 mb-3">
+            <div class="card border-0 shadow-sm rounded-4 p-3 stat-card stat-card-clickable bg-white h-100" 
+                 role="button" tabindex="0" data-bs-toggle="modal" data-bs-target="#precisionModal" title="Click to view Diagnostic Precision & Architecture">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon bg-info-subtle text-info me-3">
+                        <i class="fa-solid fa-circle-check fs-4"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small text-uppercase fw-semibold">{{ t('dashboard.model_accuracy') }}</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-muted card-click-hint small"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark mb-0">94.9%</h4>
+                        <small class="text-info fw-semibold">{{ t('dashboard.model_accuracy_sub') }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Row -->
+    <div class="row">
+        <!-- Left Column: Recent Disease Predictions Table -->
+        <div class="col-lg-8 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4 bg-white">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-clock-history me-2 text-success"></i> {{ t('dashboard.recent_predictions_title') }}</h5>
+                    <a href="{{ url_for('history') }}" class="btn btn-outline-forest btn-sm">{{ t('dashboard.view_all_history') }}</a>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_predictions %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>{{ t('history.col_photo') }}</th>
+                                    <th>{{ t('history.col_crop') }}</th>
+                                    <th>{{ t('history.col_disease') }}</th>
+                                    <th>{{ t('history.col_confidence') }}</th>
+                                    <th>{{ t('history.col_actions') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pred in recent_predictions %}
+                                <tr>
+                                    <td>
+                                        <img src="{{ url_for('static', filename='uploads/' + pred.image_name) }}" alt="Leaf" class="rounded-3 shadow-sm preview-thumb" style="width: 48px; height: 48px; object-fit: cover;">
+                                    </td>
+                                    <td><span class="badge bg-success-subtle text-success border border-success-subtle">{{ get_crop_display(pred.crop) }}</span></td>
+                                    <td class="fw-semibold text-dark">{{ get_disease_display(pred.disease) }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="progress flex-grow-1 me-2" style="height: 6px; width: 60px;">
+                                                <div class="progress-bar {% if pred.confidence >= 80 %}bg-success{% elif pred.confidence >= 60 %}bg-warning{% else %}bg-danger{% endif %}" role="progressbar" style="width: {{ pred.confidence }}%"></div>
+                                            </div>
+                                            <small class="fw-bold">{{ "%.1f"|format(pred.confidence) }}%</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('view_result', prediction_id=pred.id) }}" class="btn btn-sm btn-outline-forest">
+                                            <i class="bi bi-eye"></i> {{ t('history.view_result') }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <div class="icon-circle bg-success-subtle text-success mx-auto mb-3" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-leaf fs-2"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-1">{{ t('dashboard.no_predictions_yet') }}</h5>
+                        <p class="text-muted small col-md-8 mx-auto mb-3">{{ t('history.empty_subtitle') }}</p>
+                        <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold">
+                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> {{ t('dashboard.upload_first_leaf') }}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Supported Crops & Scanning Guidelines -->
+        <div class="col-lg-4 mb-4">
+            <!-- Supported Crops Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white">
+                <h5 class="fw-bold text-dark mb-3"><i class="fa-solid fa-leaf text-success me-2"></i> {{ t('ood.supported_crops_header') }}</h5>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-success text-white me-3"><i class="fa-solid fa-seedling"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Soybean') }}</h6>
+                        <small class="text-muted">Bacterial Blight, Frogeye Spot, Rust, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-info text-white me-3"><i class="fa-solid fa-cloud"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Cotton') }} <span class="badge bg-info text-white ms-1" style="font-size:0.65rem;">New</span></h6>
+                        <small class="text-muted">Bacterial Blight, Leaf Curl, Alternaria, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-success text-white me-3"><i class="fa-solid fa-leaf"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Green Gram') }} <span class="badge bg-success text-white ms-1" style="font-size:0.65rem;">New</span></h6>
+                        <small class="text-muted">Cercospora, Yellow Mosaic, Mildew, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-warning text-dark me-3"><i class="fa-solid fa-seedling"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Pigeon Pea') }} <span class="badge bg-warning text-dark ms-1" style="font-size:0.65rem;">New</span></h6>
+                        <small class="text-muted">Sterility Mosaic, Phytophthora, Cercospora, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-danger text-white me-3"><i class="fa-solid fa-apple-whole"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Tomato') }}</h6>
+                        <small class="text-muted">Early Blight, Late Blight, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-warning text-dark me-3"><i class="fa-solid fa-bowl-rice"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Potato') }}</h6>
+                        <small class="text-muted">Early Blight, Late Blight, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-danger text-white me-3"><i class="fa-solid fa-pepper-hot"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Bell_Pepper') }}</h6>
+                        <small class="text-muted">Bacterial Spot, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-warning text-dark me-3"><i class="fa-solid fa-wheat-awn"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Corn') }}</h6>
+                        <small class="text-muted">Common Rust, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-success text-white me-3"><i class="fa-solid fa-tree"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Apple') }}</h6>
+                        <small class="text-muted">Scab, Black Rot, Healthy</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-2 p-2 bg-light rounded-3">
+                    <div class="avatar-circle bg-primary text-white me-3"><i class="fa-solid fa-wine-glass-empty"></i></div>
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ get_crop_display('Grape') }}</h6>
+                        <small class="text-muted">Black Rot, Healthy</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Practice Guidelines Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-forest text-white">
+                <h6 class="fw-bold text-lime mb-2"><i class="fa-solid fa-circle-info me-2"></i> {{ t('ood.photo_tips_title') }}</h6>
+                <ul class="small ps-3 mb-0 text-white-50">
+                    <li class="mb-1"><strong>{{ t('ood.tip_single_leaf') }}</strong></li>
+                    <li class="mb-1"><strong>{{ t('ood.tip_focus') }}</strong></li>
+                    <li class="mb-1"><strong>{{ t('ood.tip_background') }}</strong></li>
+                    <li class="mb-0"><strong>{{ t('ood.tip_crops') }}</strong></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- INTERACTIVE DASHBOARD MODALS -->
+    <!-- ======================================================= -->
+
+    <!-- Modal 1: Total Leaf Scans & Diagnostic History Details -->
+    <div class="modal fade" id="scansModal" tabindex="-1" aria-labelledby="scansModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-forest text-white py-3">
+                    <h5 class="modal-title fw-bold" id="scansModalLabel">
+                        <i class="fa-solid fa-chart-line text-lime me-2"></i> {{ t('dashboard.total_scans') }} &amp; Diagnostic Activity
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-light rounded-4 text-center border">
+                                <span class="text-muted small text-uppercase fw-semibold d-block">Lifetime Leaf Scans</span>
+                                <h2 class="fw-bold text-forest mb-0">{{ stats.get('total_predictions', 0) }}</h2>
+                                <small class="text-muted">Recorded in secure local database</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="p-3 bg-light rounded-4 text-center border">
+                                <span class="text-muted small text-uppercase fw-semibold d-block">Diagnostic Pipeline</span>
+                                <h4 class="fw-bold text-success mb-0 mt-1">Active</h4>
+                                <small class="text-muted">MobileNetV2 + Centroid OOD Gating</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-clipboard-check text-success me-2"></i> How Diagnostic Scanning Works:</h6>
+                    <ul class="text-muted small ps-3 mb-4">
+                        <li class="mb-2"><strong>Dual-Gate Screening:</strong> Every uploaded leaf is first analyzed for chloroplast green pigmentation and edge texture variance to reject blank, blurry, or non-leaf photos.</li>
+                        <li class="mb-2"><strong>Deep Learning Inference:</strong> Leaves are classified across 10 agricultural crops and 31 pathologies in less than 200ms.</li>
+                        <li class="mb-2"><strong>Permanent Agronomic Log:</strong> Every diagnosis is saved with timestamp, confidence percentage, symptoms, and actionable recovery periods.</li>
+                    </ul>
+
+                    <div class="d-flex flex-wrap gap-2 justify-content-end">
+                        <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold">
+                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> {{ t('nav.upload_leaf') }}
+                        </a>
+                        <a href="{{ url_for('history') }}" class="btn btn-outline-forest px-3 py-2 fw-semibold">
+                            <i class="bi bi-journal-text me-1"></i> {{ t('dashboard.view_all_history') }}
+                        </a>
+                        <button type="button" class="btn btn-light px-3 py-2" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: 10 Supported Agricultural Crops -->
+    <div class="modal fade" id="cropsModal" tabindex="-1" aria-labelledby="cropsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-forest text-white py-3">
+                    <h5 class="modal-title fw-bold" id="cropsModalLabel">
+                        <i class="fa-solid fa-seedling text-lime me-2"></i> 10 Supported Agricultural Crops
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted small mb-3">
+                        The system has trained neural feature extractors and calibrated out-of-distribution (OOD) decision boundaries for the following <strong>10 agricultural crops</strong>:
+                    </p>
+                    <div class="row g-2 mb-4">
+                        <!-- Soybean -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-seedling me-1 text-success"></i> Soybean</h6>
+                                    <span class="badge bg-success-subtle text-success">4 Conditions</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Glycine max</small>
+                                <small class="text-secondary">Trifoliate foliage, Bacterial Blight, Frogeye Spot, Asian Rust.</small>
+                            </div>
+                        </div>
+                        <!-- Cotton -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100 border-info">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-cloud me-1 text-info"></i> Cotton</h6>
+                                    <span class="badge bg-info text-white">4 Conditions &bull; New</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Gossypium spp.</small>
+                                <small class="text-secondary">Bacterial Blight, Alternaria Leaf Spot, Leaf Curl Virus, Healthy.</small>
+                            </div>
+                        </div>
+                        <!-- Green Gram -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100 border-success">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-leaf me-1 text-success"></i> Green Gram</h6>
+                                    <span class="badge bg-success text-white">4 Conditions &bull; New</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Vigna radiata (Mung)</small>
+                                <small class="text-secondary">Cercospora Leaf Spot, Yellow Mosaic Virus, Powdery Mildew, Healthy.</small>
+                            </div>
+                        </div>
+                        <!-- Pigeon Pea -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100 border-warning">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-seedling me-1 text-warning"></i> Pigeon Pea</h6>
+                                    <span class="badge bg-warning text-dark">4 Conditions &bull; New</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Cajanus cajan (Arhar / Tur)</small>
+                                <small class="text-secondary">Sterility Mosaic Virus, Phytophthora Blight, Cercospora Spot, Healthy.</small>
+                            </div>
+                        </div>
+                        <!-- Tomato -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-apple-whole me-1 text-danger"></i> Tomato</h6>
+                                    <span class="badge bg-success-subtle text-success">3 Conditions</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Solanum lycopersicum</small>
+                                <small class="text-secondary">Early Blight, Late Blight, Healthy Foliage.</small>
+                            </div>
+                        </div>
+                        <!-- Potato -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-bowl-rice me-1 text-warning"></i> Potato</h6>
+                                    <span class="badge bg-success-subtle text-success">3 Conditions</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Solanum tuberosum</small>
+                                <small class="text-secondary">Early Blight, Late Blight, Healthy Foliage.</small>
+                            </div>
+                        </div>
+                        <!-- Bell Pepper -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-pepper-hot me-1 text-danger"></i> Bell Pepper</h6>
+                                    <span class="badge bg-success-subtle text-success">2 Conditions</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Capsicum annuum</small>
+                                <small class="text-secondary">Bacterial Spot, Healthy Foliage.</small>
+                            </div>
+                        </div>
+                        <!-- Corn -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-wheat-awn me-1 text-warning"></i> Corn / Maize</h6>
+                                    <span class="badge bg-success-subtle text-success">2 Conditions</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Zea mays</small>
+                                <small class="text-secondary">Common Rust, Healthy Foliage.</small>
+                            </div>
+                        </div>
+                        <!-- Apple -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-tree me-1 text-success"></i> Apple</h6>
+                                    <span class="badge bg-success-subtle text-success">3 Conditions</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Malus domestica</small>
+                                <small class="text-secondary">Apple Scab, Black Rot, Healthy Foliage.</small>
+                            </div>
+                        </div>
+                        <!-- Grape -->
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded-3 bg-light h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <h6 class="fw-bold mb-0 text-forest"><i class="fa-solid fa-wine-glass-empty me-1 text-primary"></i> Grape</h6>
+                                    <span class="badge bg-success-subtle text-success">2 Conditions</span>
+                                </div>
+                                <small class="text-muted d-block fst-italic mb-1">Vitis vinifera</small>
+                                <small class="text-secondary">Black Rot, Healthy Foliage.</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-success border-0 small mb-4 py-2">
+                        <i class="fa-solid fa-shield-halved me-1 text-success"></i> <strong>Zero False Diagnoses Guarantee:</strong> Non-crop images, weeds, fruits, or uncataloged crops (e.g., Rice, Wheat, Sugarcane) are safely rejected via cosine centroid isolation.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold">
+                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Diagnose a Leaf Now
+                        </a>
+                        <button type="button" class="btn btn-light px-3 py-2" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Complete 31-Condition Pathology Catalog -->
+    <div class="modal fade" id="categoriesModal" tabindex="-1" aria-labelledby="categoriesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-forest text-white py-3">
+                    <h5 class="modal-title fw-bold" id="categoriesModalLabel">
+                        <i class="fa-solid fa-shield-virus text-lime me-2"></i> All 31 Trained Pathology Categories
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-success-subtle text-success border px-2 py-1"><i class="fa-solid fa-circle-check me-1"></i> 10 Healthy Controls</span>
+                        <span class="badge bg-danger-subtle text-danger border px-2 py-1"><i class="fa-solid fa-bacterium me-1"></i> 5 Bacterial Pathogens</span>
+                        <span class="badge bg-warning-subtle text-dark border px-2 py-1"><i class="fa-solid fa-disease me-1"></i> 13 Fungal Pathogens</span>
+                        <span class="badge bg-info-subtle text-info border px-2 py-1"><i class="fa-solid fa-virus me-1"></i> 3 Viral Pathogens</span>
+                    </div>
+
+                    <div class="table-responsive small mb-4">
+                        <table class="table table-hover align-middle border mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Crop</th>
+                                    <th>Diagnosed Pathology</th>
+                                    <th>Scientific / Causal Agent</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Soybean</strong></td><td>Healthy Foliage</td><td>Trifoliate Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Soybean</strong></td><td>Bacterial Blight</td><td><em>Pseudomonas savastanoi pv. glycinea</em></td><td><span class="badge bg-danger-subtle text-danger">Bacterial</span></td></tr>
+                                <tr><td><strong>Soybean</strong></td><td>Frogeye Leaf Spot</td><td><em>Cercospora sojina</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                                <tr><td><strong>Soybean</strong></td><td>Soybean Rust</td><td><em>Phakopsora pachyrhizi</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+
+                                <tr><td><strong>Cotton</strong></td><td>Healthy Foliage</td><td>Healthy Vegetative Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Cotton</strong></td><td>Bacterial Blight / Angular Leaf Spot</td><td><em>Xanthomonas citri</em></td><td><span class="badge bg-danger-subtle text-danger">Bacterial</span></td></tr>
+                                <tr><td><strong>Cotton</strong></td><td>Alternaria Leaf Spot</td><td><em>Alternaria macrospora</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                                <tr><td><strong>Cotton</strong></td><td>Cotton Leaf Curl Virus</td><td><em>CLCuD</em></td><td><span class="badge bg-info-subtle text-info">Viral</span></td></tr>
+
+                                <tr><td><strong>Green Gram</strong></td><td>Healthy Foliage</td><td>Healthy Vegetative Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Green Gram</strong></td><td>Cercospora Leaf Spot</td><td><em>Cercospora canescens</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                                <tr><td><strong>Green Gram</strong></td><td>Yellow Mosaic Virus</td><td><em>MYMV</em></td><td><span class="badge bg-info-subtle text-info">Viral</span></td></tr>
+                                <tr><td><strong>Green Gram</strong></td><td>Powdery Mildew</td><td><em>Erysiphe polygoni</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+
+                                <tr><td><strong>Pigeon Pea</strong></td><td>Healthy Foliage</td><td>Healthy Vegetative Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Pigeon Pea</strong></td><td>Sterility Mosaic Disease</td><td><em>PPSMV</em></td><td><span class="badge bg-info-subtle text-info">Viral</span></td></tr>
+                                <tr><td><strong>Pigeon Pea</strong></td><td>Phytophthora Blight</td><td><em>Phytophthora cajani</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                                <tr><td><strong>Pigeon Pea</strong></td><td>Cercospora Leaf Spot</td><td><em>Cercospora indica</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+
+                                <tr><td><strong>Tomato</strong></td><td>Healthy Foliage</td><td>Healthy Canopy Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Tomato</strong></td><td>Early Blight</td><td><em>Alternaria solani</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                                <tr><td><strong>Tomato</strong></td><td>Late Blight</td><td><em>Phytophthora infestans</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+
+                                <tr><td><strong>Potato</strong></td><td>Healthy Foliage</td><td>Healthy Canopy Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Potato</strong></td><td>Early Blight</td><td><em>Alternaria solani</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                                <tr><td><strong>Potato</strong></td><td>Late Blight</td><td><em>Phytophthora infestans</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+
+                                <tr><td><strong>Bell Pepper</strong></td><td>Healthy Foliage</td><td>Healthy Capsicum Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Bell Pepper</strong></td><td>Bacterial Spot</td><td><em>Xanthomonas campestris pv. vesicatoria</em></td><td><span class="badge bg-danger-subtle text-danger">Bacterial</span></td></tr>
+
+                                <tr><td><strong>Corn</strong></td><td>Healthy Foliage</td><td>Healthy Maize Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Corn</strong></td><td>Common Rust</td><td><em>Puccinia sorghi</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+
+                                <tr><td><strong>Apple</strong></td><td>Healthy Foliage</td><td>Healthy Orchard Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Apple</strong></td><td>Apple Scab</td><td><em>Venturia inaequalis</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                                <tr><td><strong>Apple</strong></td><td>Black Rot</td><td><em>Botryosphaeria obtusa</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+
+                                <tr><td><strong>Grape</strong></td><td>Healthy Foliage</td><td>Healthy Vineyard Leaf</td><td><span class="badge bg-success-subtle text-success">Healthy</span></td></tr>
+                                <tr><td><strong>Grape</strong></td><td>Black Rot</td><td><em>Guignardia bidwellii</em></td><td><span class="badge bg-warning-subtle text-dark">Fungal</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold">
+                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Scan Any Condition
+                        </a>
+                        <button type="button" class="btn btn-light px-3 py-2" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Diagnostic Precision & Architecture Details -->
+    <div class="modal fade" id="precisionModal" tabindex="-1" aria-labelledby="precisionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-forest text-white py-3">
+                    <h5 class="modal-title fw-bold" id="precisionModalLabel">
+                        <i class="fa-solid fa-circle-check text-lime me-2"></i> Diagnostic Precision &amp; Architecture
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3 mb-4 text-center">
+                        <div class="col-sm-3 col-6">
+                            <div class="p-3 bg-light rounded-4 border h-100">
+                                <span class="text-muted xx-small text-uppercase fw-semibold d-block">Macro F1 Score</span>
+                                <h3 class="fw-bold text-success mb-0">94.9%</h3>
+                                <small class="text-muted xx-small">Balanced Accuracy</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="p-3 bg-light rounded-4 border h-100">
+                                <span class="text-muted xx-small text-uppercase fw-semibold d-block">Test Accuracy</span>
+                                <h3 class="fw-bold text-primary mb-0">93.0%</h3>
+                                <small class="text-muted xx-small">Unseen Test Set</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="p-3 bg-light rounded-4 border h-100">
+                                <span class="text-muted xx-small text-uppercase fw-semibold d-block">Validation Acc.</span>
+                                <h3 class="fw-bold text-info mb-0">94.1%</h3>
+                                <small class="text-muted xx-small">10-Crop Classifier</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-6">
+                            <div class="p-3 bg-light rounded-4 border h-100">
+                                <span class="text-muted xx-small text-uppercase fw-semibold d-block">OOD Rejection</span>
+                                <h3 class="fw-bold text-warning mb-0">100%</h3>
+                                <small class="text-muted xx-small">Rice/Wheat/Non-leaf</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-microchip text-success me-2"></i> Multi-Stage Neural Architecture Pipeline:</h6>
+                    <div class="p-3 bg-light rounded-4 border small mb-4">
+                        <div class="d-flex mb-3">
+                            <div class="me-3"><span class="badge bg-success rounded-circle p-2">1</span></div>
+                            <div>
+                                <strong>Stage 1: Foliar &amp; Morphological Gate</strong>
+                                <p class="text-muted mb-0">Rejects non-leaf photos (skin, wood, plastics, blanks) via green chloroplast pigmentation index ($G > 1.04R \land G > 1.04B \ge 0.03$) and edge texture standard deviation threshold (&sigma; &ge; 14.0).</p>
+                            </div>
+                        </div>
+                        <div class="d-flex mb-3">
+                            <div class="me-3"><span class="badge bg-primary rounded-circle p-2">2</span></div>
+                            <div>
+                                <strong>Stage 2: 128-D Cosine Embedding Centroid Gate</strong>
+                                <p class="text-muted mb-0">Extracts normalized feature vectors from MobileNetV2 layer <code>crop_features</code>. Computes cosine similarity to calibrated multi-prototype centroids (`crop_centroids.json`) to isolate unsupported crop species.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="me-3"><span class="badge bg-info rounded-circle p-2">3</span></div>
+                            <div>
+                                <strong>Stage 3: Crop-Constrained Sliced Softmax Re-normalization</strong>
+                                <p class="text-muted mb-0">Slices logits strictly to the validated crop species, eliminating cross-crop misclassification and ensuring combined probability $P(\text{crop}) \times P(\text{disease} \mid \text{crop})$.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('predict') }}" class="btn btn-forest px-4 py-2 fw-semibold">
+                            <i class="bi bi-cloud-arrow-up-fill me-1"></i> Try Diagnostic Inference
+                        </a>
+                        <button type="button" class="btn btn-light px-3 py-2" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

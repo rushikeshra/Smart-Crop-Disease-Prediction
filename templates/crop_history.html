@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Crop Recommendation History - Smart Crop AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h2 class="fw-bold text-dark mb-1">Crop Recommendation History</h2>
+            <p class="text-muted small mb-0">Records of your previous soil nutrient analyses and ML crop recommendations.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('recommend_crop') }}" class="btn btn-forest px-4 py-2 fw-semibold shadow-sm">
+                <i class="bi bi-flower1 me-2"></i> New Soil Analysis
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        {% if recommendations %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Recommended Crop</th>
+                        <th>Suitability</th>
+                        <th>Soil Profile (N-P-K)</th>
+                        <th>Environment (Temp / Hum / pH / Rain)</th>
+                        <th>Date & Time</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rec in recommendations %}
+                    <tr>
+                        <td class="ps-4">
+                            <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold fs-6 text-capitalize px-3 py-2">
+                                <i class="fa-solid fa-seedling me-1"></i> {{ rec.recommended_crop }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center" style="max-width: 130px;">
+                                <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                                    <div class="progress-bar {% if rec.confidence >= 75 %}bg-success{% elif rec.confidence >= 50 %}bg-primary{% else %}bg-warning{% endif %}" role="progressbar" style="width: {{ rec.confidence }}%"></div>
+                                </div>
+                                <span class="fw-bold small">{{ "%.1f"|format(rec.confidence) }}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">
+                                N: <strong>{{ "%.0f"|format(rec.nitrogen) }}</strong> | 
+                                P: <strong>{{ "%.0f"|format(rec.phosphorus) }}</strong> | 
+                                K: <strong>{{ "%.0f"|format(rec.potassium) }}</strong>
+                            </span>
+                        </td>
+                        <td class="small text-muted">
+                            {{ "%.1f"|format(rec.temperature) }}&deg;C &bull; {{ "%.0f"|format(rec.humidity) }}% &bull; pH {{ "%.1f"|format(rec.ph) }} &bull; {{ "%.0f"|format(rec.rainfall) }}mm
+                        </td>
+                        <td class="text-muted small">
+                            {{ rec.created_at }}
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="{{ url_for('view_crop_result', rec_id=rec.id) }}" class="btn btn-outline-forest btn-sm px-3">
+                                <i class="bi bi-eye me-1"></i> View Advice
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="stat-icon bg-success-subtle text-success mx-auto mb-3" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <i class="fa-solid fa-wheat-awn fs-3"></i>
+            </div>
+            <h5 class="fw-bold text-dark">No Crop History Recorded</h5>
+            <p class="text-muted small mb-3">You have not submitted any soil nutrient profiles for crop recommendation yet.</p>
+            <a href="{{ url_for('recommend_crop') }}" class="btn btn-forest px-4 py-2 fw-semibold">
+                <i class="bi bi-flower1 me-1"></i> Run First Soil Analysis
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

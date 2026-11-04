@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('predict.title') }} - Smart Crop AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 predict-card bg-white">
+                <div class="text-center mb-4">
+                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-2 fw-semibold">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> {{ t('predict.badge') }}
+                    </span>
+                    <h2 class="fw-bold text-dark">{{ t('predict.title') }}</h2>
+                    <p class="text-muted small">{{ t('predict.subtitle') }}</p>
+                </div>
+
+                <!-- Input Method Toggle (File Upload vs Live Camera) -->
+                <ul class="nav nav-pills nav-fill bg-light p-1 rounded-4 mb-4 border" id="predictMethodTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-4 py-2" id="tab-upload-btn" data-bs-toggle="pill" data-bs-target="#tab-upload" type="button" role="tab" aria-controls="tab-upload" aria-selected="true">
+                            <i class="fa-solid fa-cloud-arrow-up me-2"></i> {{ t('predict.tab_upload') }}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-4 py-2" id="tab-camera-btn" data-bs-toggle="pill" data-bs-target="#tab-camera" type="button" role="tab" aria-controls="tab-camera" aria-selected="false">
+                            <i class="fa-solid fa-camera me-2"></i> {{ t('predict.tab_camera') }}
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- MAIN DIAGNOSIS FORM -->
+                <form id="uploadForm" method="POST" action="{{ url_for('predict') }}" enctype="multipart/form-data">
+                    <!-- Hidden field to carry camera base64 data -->
+                    <input type="hidden" name="camera_base64" id="cameraBase64Input" value="">
+                    
+                    <div class="tab-content mb-4" id="predictTabContent">
+                        <!-- TAB 1: FILE UPLOAD -->
+                        <div class="tab-pane fade show active" id="tab-upload" role="tabpanel" aria-labelledby="tab-upload-btn">
+                            <div class="upload-dropzone border-2 border-dashed rounded-4 p-5 text-center" id="dropzone">
+                                <input type="file" name="image" id="fileInput" class="d-none" accept=".jpg, .jpeg, .png, image/*">
+                                <div id="uploadPlaceholder">
+                                    <div class="icon-circle bg-success-subtle text-success mx-auto mb-3">
+                                        <i class="fa-solid fa-cloud-arrow-up fs-2"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-dark mb-1">{{ t('predict.dropzone_title') }}</h5>
+                                    <p class="text-muted small mb-0">{{ t('predict.dropzone_subtitle') }}</p>
+                                </div>
+                                <div id="previewContainer" class="d-none">
+                                    <img id="imagePreview" src="#" alt="Leaf Preview" class="img-fluid rounded-4 shadow-sm mb-3 preview-image" style="max-height: 280px; object-fit: contain;">
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" id="removeUploadBtn">
+                                            <i class="bi bi-trash me-1"></i> {{ t('predict.change_image') }}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: LIVE CAMERA CAPTURE -->
+                        <div class="tab-pane fade" id="tab-camera" role="tabpanel" aria-labelledby="tab-camera-btn">
+                            <div class="camera-container rounded-4 p-3 text-center position-relative overflow-hidden shadow-sm" style="min-height: 320px;">
+                                <!-- Live Viewfinder Stream -->
+                                <div id="cameraLiveView" class="position-relative">
+                                    <video id="cameraVideo" autoplay playsinline muted class="rounded-3 w-100 shadow-sm" style="max-height: 340px; object-fit: cover; background: #000;"></video>
+                                    
+                                    <!-- Viewfinder Reticle Overlay -->
+                                    <div class="camera-reticle position-absolute top-50 start-50 translate-middle">
+                                        <div class="reticle-box"></div>
+                                        <span class="badge bg-dark bg-opacity-75 text-white px-3 py-1 rounded-pill mt-2 small">
+                                            <i class="fa-solid fa-leaf text-success me-1"></i> Center Leaf in Viewfinder
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Captured Image Preview (Shown after Snap) -->
+                                <div id="cameraCapturedView" class="d-none text-center">
+                                    <img id="cameraPreviewImg" src="#" alt="Captured Leaf" class="img-fluid rounded-3 shadow mb-2" style="max-height: 340px; object-fit: contain;">
+                                    <div class="small text-white-50 mb-2">
+                                        <i class="fa-solid fa-circle-check text-success me-1"></i> Photo captured. Ready for diagnosis.
+                                    </div>
+                                </div>
+
+                                <!-- Camera Controls Toolbar -->
+                                <div class="camera-toolbar mt-3 d-flex flex-wrap justify-content-center align-items-center gap-2">
+                                    <button type="button" id="startCameraBtn" class="btn btn-outline-light btn-sm px-3 d-none">
+                                        <i class="fa-solid fa-video me-1"></i> {{ t('predict.camera_start') }}
+                                    </button>
+                                    <button type="button" id="snapPhotoBtn" class="btn btn-forest px-4 py-2 fw-semibold">
+                                        <i class="fa-solid fa-camera me-1"></i> {{ t('predict.camera_capture') }}
+                                    </button>
+                                    <button type="button" id="switchCameraBtn" class="btn btn-outline-light btn-sm px-3" title="Switch front/rear camera">
+                                        <i class="fa-solid fa-arrows-rotate me-1"></i> {{ t('predict.camera_switch') }}
+                                    </button>
+                                    <button type="button" id="retakePhotoBtn" class="btn btn-outline-danger btn-sm px-3 d-none">
+                                        <i class="fa-solid fa-rotate-left me-1"></i> {{ t('predict.camera_retake') }}
+                                    </button>
+                                </div>
+
+                                <!-- Camera Alerts / Permission Warnings -->
+                                <div id="cameraAlert" class="alert alert-warning py-2 px-3 small mt-3 d-none text-start mb-0"></div>
+
+                                <!-- Offscreen canvas for grabbing high-res frames -->
+                                <canvas id="cameraCanvas" class="d-none"></canvas>
+                            </div>
+                            <small class="text-muted d-block text-center mt-2">
+                                <i class="fa-solid fa-circle-info text-success me-1"></i> {{ t('predict.camera_guide') }}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" id="submitUploadBtn" class="btn btn-forest btn-lg py-3 fw-semibold shadow-sm" disabled>
+                            <i class="fa-solid fa-magnifying-glass-chart me-2"></i> <span id="submitBtnText">{{ t('predict.submit_btn') }}</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Helpful Guide & Supported Crops Badges -->
+                <div class="mt-4 pt-3 border-top">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <small class="text-muted fw-semibold text-uppercase">{{ t('predict.supported_catalog_title') }}</small>
+                        <button class="btn btn-sm btn-link text-forest p-0 text-decoration-none" type="button" data-bs-toggle="collapse" data-bs-target="#supportedClassesCollapse" aria-expanded="false">
+                            <i class="fa-solid fa-list-check me-1"></i> {{ t('predict.view_all_conditions') }}
+                        </button>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-1 justify-content-center mb-3">
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-seedling me-1 text-success"></i> {{ get_crop_display('Soybean') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-cloud me-1 text-info"></i> {{ get_crop_display('Cotton') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-leaf me-1 text-success"></i> {{ get_crop_display('Green Gram') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-seedling me-1 text-warning"></i> {{ get_crop_display('Pigeon Pea') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-pepper-hot me-1 text-danger"></i> {{ get_crop_display('Bell Pepper') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-apple-whole me-1 text-danger"></i> {{ get_crop_display('Tomato') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-bowl-rice me-1 text-warning"></i> {{ get_crop_display('Potato') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-wheat-awn me-1 text-warning"></i> {{ get_crop_display('Corn') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-tree me-1 text-success"></i> {{ get_crop_display('Apple') }}</span>
+                        <span class="badge bg-success-subtle text-forest border px-2 py-1"><i class="fa-solid fa-wine-glass-empty me-1 text-primary"></i> {{ get_crop_display('Grape') }}</span>
+                    </div>
+
+                    <!-- Collapsible Full Disease Breakdown -->
+                    <div class="collapse mb-3" id="supportedClassesCollapse">
+                        <div class="card card-body bg-light border-0 rounded-4 text-start small">
+                            <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-circle-check text-success me-1"></i> {{ t('predict.trained_categories_title') }}</h6>
+                            <ul class="mb-2 ps-3 text-muted">
+                                <li><strong>{{ get_crop_display('Soybean') }}:</strong> {{ get_disease_display('Soybean___healthy') }}, {{ get_disease_display('Soybean___Bacterial_blight') }}, {{ get_disease_display('Soybean___Frogeye_leaf_spot') }}, {{ get_disease_display('Soybean___Soybean_rust') }}</li>
+                                <li><strong>{{ get_crop_display('Cotton') }}:</strong> {{ get_disease_display('Cotton___Bacterial_blight') }}, {{ get_disease_display('Cotton___Alternaria_leaf_spot') }}, {{ get_disease_display('Cotton___Leaf_curl_virus') }}, {{ get_disease_display('Cotton___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Green Gram') }}:</strong> {{ get_disease_display('Green_Gram___Cercospora_leaf_spot') }}, {{ get_disease_display('Green_Gram___Yellow_mosaic') }}, {{ get_disease_display('Green_Gram___Powdery_mildew') }}, {{ get_disease_display('Green_Gram___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Pigeon Pea') }}:</strong> {{ get_disease_display('Pigeon_Pea___Sterility_mosaic') }}, {{ get_disease_display('Pigeon_Pea___Phytophthora_blight') }}, {{ get_disease_display('Pigeon_Pea___Cercospora_leaf_spot') }}, {{ get_disease_display('Pigeon_Pea___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Bell Pepper') }}:</strong> {{ get_disease_display('Pepper__bell___Bacterial_spot') }}, {{ get_disease_display('Pepper__bell___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Tomato') }}:</strong> {{ get_disease_display('Tomato___Early_blight') }}, {{ get_disease_display('Tomato___Late_blight') }}, {{ get_disease_display('Tomato___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Potato') }}:</strong> {{ get_disease_display('Potato___Early_blight') }}, {{ get_disease_display('Potato___Late_blight') }}, {{ get_disease_display('Potato___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Corn') }}:</strong> {{ get_disease_display('Corn_(maize)___Common_rust_') }}, {{ get_disease_display('Corn_(maize)___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Apple') }}:</strong> {{ get_disease_display('Apple___Apple_scab') }}, {{ get_disease_display('Apple___Black_rot') }}, {{ get_disease_display('Apple___healthy') }}</li>
+                                <li><strong>{{ get_crop_display('Grape') }}:</strong> {{ get_disease_display('Grape___Black_rot') }}, {{ get_disease_display('Grape___healthy') }}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <small class="text-muted d-block">
+                            <i class="fa-solid fa-camera text-primary me-1"></i> <strong>{{ t('predict.photo_advice_title') }}</strong> {{ t('predict.photo_advice_text') }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

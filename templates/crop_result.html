@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Crop Recommendation Result - Smart Crop AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- Left Column: Recommended Crop & Soil Profile -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 85px;">
+                <div class="text-center mb-3">
+                    <div class="stat-icon bg-success-subtle text-success mx-auto mb-3" style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fa-solid fa-wheat-awn fs-1"></i>
+                    </div>
+                    <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fw-semibold border border-success-subtle">
+                        <i class="fa-solid fa-circle-check me-1"></i> Recommendation Ready
+                    </span>
+                </div>
+
+                <div class="border-top pt-3 mb-3 text-center">
+                    <small class="text-muted text-uppercase fw-semibold d-block">Optimal Cultivation Crop</small>
+                    <h2 class="fw-bold text-forest mb-1 text-capitalize">
+                        {{ recommended_crop }}
+                    </h2>
+                    <p class="text-muted small mb-3"><em>{{ crop_info.scientific_name if crop_info and crop_info.scientific_name else 'Agronomic Field Variety' }}</em></p>
+
+                    <small class="text-muted text-uppercase fw-semibold d-block text-start">Suitability Confidence</small>
+                    <div class="d-flex align-items-center mt-1 mb-3">
+                        <div class="progress flex-grow-1 me-2" style="height: 10px;">
+                            <div class="progress-bar {% if confidence >= 75 %}bg-success{% elif confidence >= 50 %}bg-primary{% else %}bg-warning{% endif %}" role="progressbar" style="width: {{ confidence }}%"></div>
+                        </div>
+                        <span class="fw-bold fs-6 text-dark">{{ "%.1f"|format(confidence) }}%</span>
+                    </div>
+
+                    <!-- Top 3 Alternative Candidates -->
+                    {% if top_suggestions and top_suggestions|length > 1 %}
+                    <div class="text-start border-top pt-3 mb-3">
+                        <small class="text-muted text-uppercase fw-semibold d-block mb-2">Alternative Suitable Crops</small>
+                        {% for alt in top_suggestions[1:3] %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-dark fw-semibold text-capitalize"><i class="fa-solid fa-seedling text-muted me-1 small"></i> {{ alt.crop }}</span>
+                            <span class="badge bg-light text-dark border">{{ "%.1f"|format(alt.confidence) }}%</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Input Soil & Weather Parameters -->
+                <div class="border-top pt-3 mb-3">
+                    <small class="text-muted text-uppercase fw-semibold d-block mb-2">Analyzed Soil & Climate Profile</small>
+                    <div class="row g-2 text-center">
+                        <div class="col-4">
+                            <div class="p-2 bg-light rounded-3">
+                                <small class="text-muted d-block xx-small">Nitrogen (N)</small>
+                                <strong class="text-success">{{ inputs.get('N', inputs.get('nitrogen', 'N/A')) }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 bg-light rounded-3">
+                                <small class="text-muted d-block xx-small">Phosphorus (P)</small>
+                                <strong class="text-success">{{ inputs.get('P', inputs.get('phosphorus', 'N/A')) }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="p-2 bg-light rounded-3">
+                                <small class="text-muted d-block xx-small">Potassium (K)</small>
+                                <strong class="text-success">{{ inputs.get('K', inputs.get('potassium', 'N/A')) }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded-3">
+                                <small class="text-muted d-block xx-small">Temperature</small>
+                                <strong>{{ "%.1f"|format(inputs.get('temperature', 0)|float) }}&deg;C</strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded-3">
+                                <small class="text-muted d-block xx-small">Humidity</small>
+                                <strong>{{ "%.1f"|format(inputs.get('humidity', 0)|float) }}%</strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded-3">
+                                <small class="text-muted d-block xx-small">Soil pH</small>
+                                <strong>{{ "%.1f"|format(inputs.get('ph', 0)|float) }}</strong>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-2 bg-light rounded-3">
+                                <small class="text-muted d-block xx-small">Rainfall</small>
+                                <strong>{{ "%.1f"|format(inputs.get('rainfall', 0)|float) }} mm</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-top pt-3 d-grid gap-2 d-print-none">
+                    <a href="{{ url_for('recommend_crop') }}" class="btn btn-forest fw-semibold">
+                        <i class="bi bi-arrow-repeat me-1"></i> Test New Parameters
+                    </a>
+                    <button type="button" class="btn btn-outline-forest btn-sm" onclick="window.print();">
+                        <i class="bi bi-printer me-1"></i> Print / Save Report
+                    </button>
+                    <a href="{{ url_for('crop_history') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-journal-text me-1"></i> View In Crop History
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Comprehensive Agronomic Cultivation Guide -->
+        <div class="col-lg-8">
+            <!-- 1. Crop Overview -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="section-icon bg-success-subtle text-success me-3">
+                        <i class="fa-solid fa-book-open fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0 text-dark">Crop Overview & Classification</h5>
+                        <small class="text-muted">Botanical details and market category</small>
+                    </div>
+                </div>
+                <div class="mb-2">
+                    <span class="badge bg-forest px-3 py-1 me-2">{{ crop_info.category if crop_info else 'Agriculture' }}</span>
+                    {% if crop_info and crop_info.harvest_duration %}
+                    <span class="badge bg-light text-dark border px-3 py-1"><i class="bi bi-clock me-1"></i> {{ crop_info.harvest_duration }}</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted mb-0 lh-base">
+                    {{ crop_info.description if crop_info else 'Optimal commercial crop chosen by the Random Forest classifier based on your field nitrogen, phosphorus, potassium, and seasonal weather parameters.' }}
+                </p>
+            </div>
+
+            <!-- 2. Soil Requirements & pH -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="section-icon bg-primary-subtle text-primary me-3">
+                        <i class="fa-solid fa-layer-group fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0 text-dark">Soil Requirements & pH Suitability</h5>
+                        <small class="text-muted">Soil texture, aeration, and drainage conditions</small>
+                    </div>
+                </div>
+                <p class="text-muted mb-0 lh-base">
+                    {{ crop_info.soil_information if crop_info and crop_info.soil_information else 'Requires fertile, well-drained soil rich in organic matter. Maintain balanced moisture and avoid prolonged water stagnation.' }}
+                </p>
+            </div>
+
+            <!-- 3. Cultivation & Sowing Guidelines -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="section-icon bg-warning-subtle text-warning me-3">
+                        <i class="fa-solid fa-seedling fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0 text-dark">Sowing & Cultivation Guidelines</h5>
+                        <small class="text-muted">Seedbed preparation, row spacing, and fertilizer management</small>
+                    </div>
+                </div>
+                <p class="text-muted mb-0 lh-base">
+                    {{ crop_info.cultivation_information if crop_info and crop_info.cultivation_information else 'Plow field thoroughly to achieve fine tilth. Apply basal fertilizers before sowing and maintain optimal plant spacing for healthy canopy growth.' }}
+                </p>
+            </div>
+
+            <!-- 4. Water & Irrigation Management -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-3 bg-white">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="section-icon bg-info-subtle text-info me-3">
+                        <i class="fa-solid fa-droplet fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0 text-dark">Water Requirements & Irrigation</h5>
+                        <small class="text-muted">Moisture regimes and critical growth stages</small>
+                    </div>
+                </div>
+                <p class="text-muted mb-0 lh-base">
+                    {{ crop_info.water_requirement if crop_info and crop_info.water_requirement else 'Moderate irrigation required at flowering and grain/pod development stages.' }}
+                </p>
+            </div>
+
+            <!-- 5. Expected Benefits & Farming Tips -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 bg-white border-start border-success border-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="section-icon bg-success-subtle text-success me-3">
+                        <i class="fa-solid fa-lightbulb fs-5"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0 text-dark">Agronomic Best Practices & Farming Tips</h5>
+                        <small class="text-muted">Pro-tips to maximize hectare yield and revenue</small>
+                    </div>
+                </div>
+                {% if crop_info and crop_info.expected_benefits %}
+                <div class="mb-3 p-3 bg-light rounded-3">
+                    <strong class="d-block text-dark small mb-1"><i class="fa-solid fa-chart-line text-success me-1"></i> Expected Economic & Nutritional Benefits:</strong>
+                    <span class="text-muted small">{{ crop_info.expected_benefits }}</span>
+                </div>
+                {% endif %}
+                <p class="text-muted mb-0 lh-base">
+                    {{ crop_info.farming_tips if crop_info and crop_info.farming_tips else 'Conduct periodic soil fertility tests, follow integrated pest management (IPM), and ensure crop rotation with legumes to sustain soil health.' }}
+                </p>
+            </div>
+
+            <!-- Educational Disclaimer -->
+            <div class="alert alert-secondary border-0 rounded-4 p-3 small text-muted d-flex align-items-start">
+                <i class="fa-solid fa-circle-exclamation fs-5 me-3 text-secondary mt-1"></i>
+                <div>
+                    <strong class="d-block text-dark mb-1">Agronomic Advisory Disclaimer:</strong>
+                    This crop recommendation is generated via machine learning trained on historical soil and climate datasets. Local market prices, seed availability, and local micro-climatic factors should be verified with local Krishi Vigyan Kendra (KVK) or agricultural extension officers before final sowing.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .navbar, .footer, .d-print-none, .btn {
+        display: none !important;
+    }
+    body {
+        background: #ffffff !important;
+        font-size: 12pt;
+    }
+    .card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+}
+</style>
+{% endblock %}

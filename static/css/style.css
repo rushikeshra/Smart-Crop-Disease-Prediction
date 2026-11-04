@@ -1,0 +1,268 @@
+/* ==========================================================
+   SMART CROP SYSTEM - MODERN AGRICULTURAL THEME STYLES
+   ========================================================== */
+
+:root {
+    --forest-green: #1b4332;
+    --forest-dark: #081c15;
+    --leaf-green: #2d6a4f;
+    --lime-green: #52b788;
+    --mint-light: #d8f3dc;
+    --accent-gold: #d4a373;
+    --body-bg: #f8faf9;
+    --card-bg: #ffffff;
+    --text-main: #212529;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--body-bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Backgrounds & Colors */
+.bg-forest {
+    background-color: var(--forest-green) !important;
+}
+
+.text-forest {
+    color: var(--forest-green) !important;
+}
+
+.text-lime {
+    color: var(--lime-green) !important;
+}
+
+.bg-lime {
+    background-color: var(--lime-green) !important;
+}
+
+/* Buttons */
+.btn-forest {
+    background-color: var(--forest-green);
+    color: #ffffff;
+    border: none;
+    transition: all 0.25s ease-in-out;
+}
+
+.btn-forest:hover, .btn-forest:focus {
+    background-color: var(--leaf-green);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.25);
+}
+
+.btn-outline-forest {
+    color: var(--forest-green);
+    border-color: var(--forest-green);
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-forest:hover {
+    background-color: var(--forest-green);
+    color: #ffffff;
+}
+
+.btn-lime {
+    background-color: var(--lime-green);
+    color: var(--forest-dark);
+    border: none;
+}
+
+.btn-lime:hover {
+    background-color: #40916c;
+    color: #ffffff;
+}
+
+/* Navbar */
+.navbar-brand {
+    font-size: 1.25rem;
+    letter-spacing: -0.5px;
+}
+
+.avatar-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+}
+
+/* Dropzone & File Upload */
+.upload-dropzone {
+    background-color: #fbfdfc;
+    border: 2px dashed #b7e4c7;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-dropzone:hover, .upload-dropzone.dragover {
+    background-color: var(--mint-light);
+    border-color: var(--leaf-green);
+}
+
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon, .section-icon, .feature-icon, .auth-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hero Section */
+.hero-banner {
+    background: linear-gradient(135deg, #ffffff 0%, #edf7f0 100%);
+}
+
+.hero-img {
+    height: 240px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Custom Nav Pills */
+.custom-nav-tabs .nav-link {
+    color: #495057;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+    border: none;
+}
+
+.custom-nav-tabs .nav-link.active {
+    background-color: var(--forest-green);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(27, 67, 50, 0.2);
+}
+
+/* Card hover animation */
+.feature-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Footer */
+.footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.xx-small {
+    font-size: 0.75rem;
+}
+
+/* Clickable Interactive Stat Cards */
+.stat-card-clickable {
+    cursor: pointer;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.07) !important;
+}
+
+.stat-card-clickable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(27, 67, 50, 0.12) !important;
+    border-color: #52b788 !important;
+}
+
+.stat-card-clickable:active {
+    transform: translateY(-1px);
+}
+
+.stat-card-clickable .card-click-hint {
+    opacity: 0.35;
+    transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.stat-card-clickable:hover .card-click-hint {
+    opacity: 1;
+    color: var(--forest-green) !important;
+    transform: scale(1.15);
+}
+
+/* Modal Enhancements */
+.modal-content.rounded-4 {
+    border-radius: 1.25rem !important;
+}
+
+.modal-header.bg-forest {
+    border-top-left-radius: 1.25rem;
+    border-top-right-radius: 1.25rem;
+}
+
+/* Prediction Mode Tabs & Live Camera Reticle */
+#predictMethodTabs .nav-link {
+    color: #495057;
+    font-weight: 600;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#predictMethodTabs .nav-link:hover {
+    color: var(--forest-green);
+    background-color: rgba(27, 67, 50, 0.05);
+}
+
+#predictMethodTabs .nav-link.active {
+    background-color: var(--forest-green);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(27, 67, 50, 0.25);
+}
+
+.camera-container {
+    background: #0f1914 !important;
+    border: 1px solid rgba(82, 183, 136, 0.2) !important;
+}
+
+.camera-reticle {
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+    max-width: 290px;
+    height: 70%;
+    max-height: 230px;
+    z-index: 5;
+}
+
+.reticle-box {
+    width: 100%;
+    height: 100%;
+    border: 2px dashed rgba(82, 183, 136, 0.85);
+    border-radius: 1.25rem;
+    box-shadow: 0 0 20px rgba(82, 183, 136, 0.35);
+    position: relative;
+    animation: pulseReticle 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseReticle {
+    0%, 100% {
+        border-color: rgba(82, 183, 136, 0.85);
+        box-shadow: 0 0 15px rgba(82, 183, 136, 0.25);
+    }
+    50% {
+        border-color: rgba(149, 213, 178, 1);
+        box-shadow: 0 0 25px rgba(82, 183, 136, 0.55);
+    }
+}
+

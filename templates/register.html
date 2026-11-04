@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Smart Crop System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 auth-card">
+                <div class="text-center mb-4">
+                    <div class="auth-icon bg-success-subtle text-success mx-auto mb-2">
+                        <i class="fa-solid fa-user-plus fs-4"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark">Create Account</h3>
+                    <p class="text-muted small">Join Smart Crop AI to diagnose crops and save prediction history</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('register') }}" class="needs-validation">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-semibold small">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="e.g. John Doe" value="{{ name or '' }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold small">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" value="{{ email or '' }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-semibold small">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="At least 6 characters" minlength="6" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label fw-semibold small">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="bi bi-shield-check"></i></span>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Re-type your password" minlength="6" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-forest w-100 py-2 fw-semibold shadow-sm">
+                        <i class="bi bi-check2-circle me-1"></i> Register Account
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 border-top pt-3">
+                    <p class="text-muted small mb-0">Already have an account? <a href="{{ url_for('login') }}" class="text-success fw-semibold text-decoration-none">Log In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
